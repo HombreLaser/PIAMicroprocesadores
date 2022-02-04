@@ -7,7 +7,7 @@
    Parte de la librería para el análisis sintáctico de 
    expresiones aritméticas: implementación del lexer.
 */
-#include <ctype.h>
+#include <cctype>
 #include <string>
 #include <iterator>
 #include "lexer.hpp"
@@ -21,15 +21,15 @@ Lexer::Lexer(char *text){
 
 void Lexer::setText(char *text){
   this->text = text;
-  current_pos = text; // Se inicializa el puntero al inicio del texto.
+  current_char = text; // Se inicializa el puntero al inicio del texto.
 }
 
 char *Lexer::createNumber(){
   char *number = {new char[STR_MAX_LEN]}, *ptr;
-  int i = 0;
+  size_t i = 0;
   ptr = number;
   
-  while(isdigit(*current_pos))
+  while(isdigit(*current_char))
   {
     if(i > (STR_MAX_LEN - 1))
     {
@@ -37,8 +37,8 @@ char *Lexer::createNumber(){
       throw MaxIntSize("Alcanzado máximo número de carácteres en un entero.");
     }
     
-    *ptr = *current_pos;
-    ++current_pos;
+    *ptr = *current_char;
+    ++current_char;
     ++ptr;
     ++i;
   }
@@ -49,22 +49,22 @@ char *Lexer::createNumber(){
 Token Lexer::nextToken(){
   Token next_token;
 
-  if(*current_pos == '\0')
+  if(*current_char == '\0')
   {
     next_token = {nil, NULL};
-    current_pos = text; // Regresamos el puntero al principio.
+    current_char = text; // Regresamos el puntero al principio.
 
     return next_token;
   }
   
-  if(isdigit(*current_pos))
+  if(isdigit(*current_char))
   {
     next_token = {number, createNumber()};
 
     return next_token;
   }
   
-  switch(*current_pos)
+  switch(*current_char)
   {
   case '(':
     next_token = {left_parens, NULL};
@@ -88,7 +88,7 @@ Token Lexer::nextToken(){
     throw LexerException("Carácter inválido.");
   }
   
-  ++current_pos;
+  ++current_char;
 
   return next_token;
 }

@@ -36,7 +36,7 @@ struct Token{
 class Lexer{
 private:
   char *text;
-  char *current_pos; // Carácter actual del texto a escanear.
+  char *current_char; // Carácter actual del texto a escanear.
   char *createNumber();
 public:
   Lexer(char *text);
